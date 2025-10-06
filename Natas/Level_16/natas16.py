@@ -2,7 +2,7 @@
 """
 
 Usage:
-    python natas16_to_17_simple.py --user natas16 --pass YOUR_PASSWORD
+    python natas16.py --user natas16 --pass YOUR_PASSWORD
 
 Notes:
 - Provide credentials via CLI.
