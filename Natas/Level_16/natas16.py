@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 """
-Simple natas16 -> natas17 enumerator (grep trick).
 
 Usage:
     python natas16_to_17_simple.py --user natas16 --pass YOUR_PASSWORD
