@@ -31,7 +31,6 @@ def probe(session, url, auth, prefix, char, timeout=8):
         print(f"[!] Request error: {e}")
         return None
 
-    # If "zooming" is NOT in the response, grep printed something -> match found
     return "zooming" not in r.text
 
 
