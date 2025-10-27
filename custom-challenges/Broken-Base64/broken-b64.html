@@ -1,29 +1,155 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>CTF — Broken Base64</title>
-  <style>
-    body{font-family:JetBrains Mono, monospace;background:#0d1117;color:#e6edf3;max-width:700px;margin:60px auto;padding:24px;line-height:1.6}
-    h1{color:#79c0ff;text-align:center}
-    .card{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:20px;margin-top:20px}
-    code,pre{background:#0d1117;color:#ffa657;padding:4px 6px;border-radius:4px}
-    pre{display:block;white-space:pre-wrap;word-wrap:break-word}
-    .meta{text-align:center;color:#8b949e;font-size:0.9rem}
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Broken Base64 — The Glitched Transmission</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    background:radial-gradient(circle at 50% 15%, #05060a 0%, #000 100%);
+    color:#00ffcc;
+    font-family:'Share Tech Mono', monospace;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:40px 16px;
+    overflow:hidden;
+  }
+
+  /* scanline overlay */
+  body::after{
+    content:"";
+    position:fixed;
+    top:0;left:0;width:100%;height:100%;
+    background:repeating-linear-gradient(
+      rgba(0,0,0,0) 0px,
+      rgba(0,255,204,0.02) 1px,
+      rgba(0,0,0,0) 2px
+    );
+    pointer-events:none;
+    animation:scan 10s linear infinite;
+    mix-blend-mode:overlay;
+  }
+  @keyframes scan {
+    0% {transform:translateY(-100%);}
+    100% {transform:translateY(100%);}
+  }
+
+  .container{
+    background:rgba(0,0,0,0.75);
+    border:1px solid rgba(0,255,204,0.2);
+    border-radius:10px;
+    box-shadow:0 0 40px rgba(0,255,204,0.15);
+    max-width:780px;
+    width:100%;
+    padding:32px;
+    position:relative;
+    animation: fadein 1.5s ease, pulse 4s ease-in-out infinite alternate;
+  }
+  @keyframes fadein {
+    from{opacity:0;transform:translateY(10px);}
+    to{opacity:1;transform:none;}
+  }
+  @keyframes pulse {
+    0% {box-shadow:0 0 20px rgba(0,255,204,0.1);}
+    100% {box-shadow:0 0 60px rgba(0,255,204,0.4);}
+  }
+
+  h1{
+    text-transform:uppercase;
+    letter-spacing:3px;
+    text-align:center;
+    color:#00ffcc;
+    font-size:1.8rem;
+    text-shadow:0 0 12px #00ffaa, 0 0 30px #00ffaa33;
+    margin-bottom:10px;
+    animation: flicker 3s infinite;
+  }
+  @keyframes flicker {
+    0%,19%,21%,23%,25%,54%,56%,100% {opacity:1;text-shadow:0 0 12px #00ffaa,0 0 30px #00ffaa33;}
+    20%,24%,55% {opacity:0.4;text-shadow:none;}
+  }
+
+  .subtitle{text-align:center;color:#46ffd9;font-size:0.9rem;margin-bottom:22px;opacity:0.8}
+
+  .story{
+    color:#9fffe3;
+    font-size:0.98rem;
+    line-height:1.6;
+    background:linear-gradient(90deg, rgba(0,255,255,0.05), rgba(255,255,255,0.02));
+    border-left:3px solid #00ffcc;
+    padding:14px;
+    border-radius:8px;
+    margin-bottom:20px;
+    animation:typewriter 6s steps(80,end);
+    white-space:pre-line;
+    overflow:hidden;
+  }
+  @keyframes typewriter {
+    from {width:0}
+    to {width:100%}
+  }
+
+  pre{
+    background:rgba(0,255,255,0.05);
+    border:1px solid rgba(0,255,255,0.1);
+    border-radius:8px;
+    padding:14px;
+    font-size:0.95rem;
+    color:#e0fff4;
+    word-break:break-all;
+    white-space:pre-wrap;
+    margin-bottom:10px;
+    position:relative;
+  }
+  pre::after{
+    content:"▌";
+    position:absolute;
+    bottom:10px;
+    right:10px;
+    color:#00ffaa;
+    animation:blink 1s steps(1) infinite;
+  }
+  @keyframes blink {
+    50% {opacity:0;}
+  }
+
+  footer{
+    text-align:center;
+    color:#007f66;
+    font-size:0.8rem;
+    margin-top:18px;
+    opacity:0.7;
+    animation:glow 4s ease-in-out infinite alternate;
+  }
+  @keyframes glow {
+    0% {color:#004f44;}
+    100% {color:#00ffaa;}
+  }
+</style>
 </head>
 <body>
-  <h1>Broken Base64</h1>
-  <p class="meta">Category: Crypto</p>
+  <div class="container">
+    <h1>Broken Base64</h1>
+    <div class="subtitle">[ transmission fragment // source: unknown node ]</div>
 
-  <div class="card">
-    <p>A corrupted Base64 string hides a secret. Find the right combination that matches the given MD5 hash and recover the flag.</p>
+    <div class="story">
+      The signal surfaced deep within the dark relay.  
+      A damaged archive — bleeding static through the wire.  
+      Its structure is fractured, fragments displaced, the data half-alive.  
+      Analysts tried to rebuild it, but the checksum never lied.  
+      Only the right sequence can bring the message back.
+    </div>
 
-    <pre>Template: RkxB?19N?01P?1NJ?05BVFVSRQ==
-MD5:      ac93182e124d1c843e9bcd9bec1f1797</pre>
+    <pre>
+Template: RkxB?19N?01P?1NJ?05BVFVSRQ==
+MD5:      ac93182e124d1c843e9bcd9bec1f1797
+    </pre>
 
-
+    <footer>the relay hums quietly... waiting for reconstruction.</footer>
   </div>
 </body>
 </html>
