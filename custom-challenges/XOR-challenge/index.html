@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Breach Protocol: MomoRizza Operation</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:radial-gradient(circle at 50% 20%, #050607 0%, #000 100%);
+    color:#0f0;
+    font-family:'Share Tech Mono', monospace;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:28px;
+    overflow:hidden;
+  }
+
+  /* scanline overlay */
+  body::after{
+    content:"";
+    position:fixed;
+    inset:0;
+    background:repeating-linear-gradient(
+      to bottom,
+      rgba(0,255,128,0.03) 0px,
+      rgba(0,255,128,0.03) 1px,
+      transparent 2px
+    );
+    animation:scan 7s linear infinite;
+    pointer-events:none;
+    mix-blend-mode:overlay;
+  }
+  @keyframes scan {
+    0%{transform:translateY(-100%)}
+    100%{transform:translateY(100%)}
+  }
+
+  @keyframes flicker {
+    0%,18%,22%,25%,53%,57%,100% {opacity:1;text-shadow:0 0 5px #0f0,0 0 15px #00ff99;}
+    20%,24%,55% {opacity:.3;text-shadow:none;}
+  }
+
+  .stage{
+    width:100%;
+    max-width:1100px;
+    display:grid;
+    grid-template-columns: 1fr 420px;
+    gap:22px;
+    align-items:start;
+    position:relative;
+    z-index:1;
+  }
+  .panel{
+    background:linear-gradient(180deg, rgba(0,0,0,0.75), rgba(10,12,18,0.9));
+    border:1px solid rgba(0,255,136,0.08);
+    padding:22px;
+    border-radius:12px;
+    box-shadow:0 0 50px rgba(0,255,136,0.08);
+    position:relative;
+    overflow:hidden;
+    opacity:0;
+    animation:glitchIn 1.2s ease forwards;
+  }
+
+  /* digital distortion entry */
+  @keyframes glitchIn {
+    0% {
+      opacity:0;
+      clip-path:inset(50% 0 50% 0);
+      transform:skewX(30deg) scale(1.1);
+    }
+    20% {
+      clip-path:inset(20% 0 65% 0);
+      transform:skewX(-10deg);
+    }
+    40% {
+      clip-path:inset(10% 0 40% 0);
+      transform:skewX(10deg);
+    }
+    60% {
+      clip-path:inset(0 0 10% 0);
+      transform:skewX(-5deg);
+    }
+    80% {
+      opacity:0.9;
+      clip-path:inset(0);
+      transform:skewX(2deg);
+    }
+    100% {
+      opacity:1;
+      clip-path:none;
+      transform:none;
+    }
+  }
+
+  .title{
+    font-size:22px;
+    color:#b9ffb9;
+    text-transform:uppercase;
+    letter-spacing:2px;
+    margin-bottom:8px;
+    animation:flicker 3s infinite;
+  }
+  .lead{
+    color:#9dd39d;
+    margin-bottom:12px;
+    opacity:0;
+    animation:textReveal 2s ease forwards 0.8s;
+  }
+
+  @keyframes textReveal {
+    0% {opacity:0;filter:blur(6px);letter-spacing:6px;}
+    100% {opacity:1;filter:blur(0);letter-spacing:1px;}
+  }
+
+  .imgwrap{
+    background:rgba(255,255,255,0.02);
+    padding:10px;
+    border-radius:8px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    overflow:hidden;
+  }
+  .imgwrap::after{
+    content:"";
+    position:absolute;
+    inset:0;
+    background:linear-gradient(transparent 40%,rgba(0,255,136,0.08) 50%,transparent 60%);
+    animation:scanline 5s linear infinite;
+  }
+  @keyframes scanline{
+    0%{transform:translateY(-100%)}
+    100%{transform:translateY(100%)}
+  }
+  .imgwrap img{
+    max-width:100%;
+    border-radius:6px;
+    display:block;
+    box-shadow:0 8px 30px rgba(0,255,128,0.1);
+    filter:brightness(0.9) contrast(1.2);
+    transition:transform 0.6s ease, filter 0.6s ease;
+  }
+  .imgwrap:hover img{
+    transform:scale(1.03);
+    filter:brightness(1.1) contrast(1.3);
+  }
+
+  .story{
+    margin-top:14px;
+    color:#9fbf9f;
+    font-size:0.95rem;
+    line-height:1.45;
+    overflow:hidden;
+    opacity:0;
+    animation:textReveal 2.4s ease forwards 1.2s;
+  }
+
+  .hint{
+    margin-top:16px;
+    padding:10px;
+    border-radius:8px;
+    background:linear-gradient(90deg, rgba(124,58,237,0.04), rgba(239,68,68,0.02));
+    color:#e6ffe6;
+    font-weight:600;
+    animation:glowPulse 3s ease-in-out infinite alternate;
+  }
+  @keyframes glowPulse {
+    0%{box-shadow:0 0 8px rgba(0,255,128,0.1);}
+    100%{box-shadow:0 0 25px rgba(0,255,128,0.4);}
+  }
+  footer{margin-top:18px;color:#7fae7f;font-size:12px;opacity:0.8}
+
+  .hexbox{
+    margin-top:14px;
+    padding:12px;
+    border-radius:8px;
+    background:rgba(0,255,136,0.03);
+    border-left:4px solid #00ff88;
+    color:#caffd4;
+    font-family:monospace;
+    word-break:break-all;
+    font-size:0.95rem;
+    position:relative;
+    animation:hexPulse 2s ease-in-out infinite alternate;
+  }
+  @keyframes hexPulse {
+    0%{text-shadow:0 0 5px #00ff99;}
+    100%{text-shadow:0 0 15px #00ffcc;}
+  }
+
+  @media (max-width:980px){
+    .stage{grid-template-columns:1fr;padding-bottom:18px}
+  }
+</style>
+</head>
+<body>
+  <main class="stage">
+    <section class="panel" aria-labelledby="missionTitle">
+      <h2 id="missionTitle" class="title">Breach Protocol — Evidence</h2>
+      <div class="lead">Two artifacts were intercepted. Both from the same shattered vault.</div>
+
+      <div class="imgwrap">
+        <img src="carbon.png" alt="A cryptic screenshot left at the breach site" />
+      </div>
+
+      <div class="story">
+        The only frame left from the dying system feed.  
+        The analysts call it a "footprint" — deliberate, distorted, alive with pattern.  
+        Next to it, a single strand of hex lay engraved inside the buffer.
+      </div>
+
+      <div class="hint">
+        Combine the image and the hex. They complete each other.  
+        Somewhere inside them — the system’s final whisper.
+      </div>
+
+      <footer>Transmission ends. Channel silent. Your move, operator.</footer>
+    </section>
+
+    <aside class="panel" id="breach" aria-labelledby="breachTitle" style="animation-delay:0.4s">
+      <h3 id="breachTitle" class="title">THE SINGLE TRACE</h3>
+      <div class="lead">Recovered data fragment — classified.</div>
+
+      <div class="hexbox">
+1e161e1b37045a18132e041a250a0941722415170e190c03370e4d1d3b1a1f095b6b360c2a220c2b3b0e
+      </div>
+
+      <div class="story" style="margin-top:12px">
+        The hex and the image arrived in the same packet.  
+        Decode the patterns. Follow the noise. Uncover what the breach tried to say.
+      </div>
+    </aside>
+  </main>
+</body>
+</html>
